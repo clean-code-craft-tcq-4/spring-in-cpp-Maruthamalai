@@ -1,10 +1,12 @@
+#if 0
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 
 #include "catch.hpp"
 #include "stats.h"
 
-#include <cmath>
+#include <math.h>
 
+using namespace std;
 TEST_CASE("reports average, minimum and maximum") {
     auto computedStats = Statistics::ComputeStatistics({1.5, 8.9, 3.2, 4.5});
     float epsilon = 0.001;
@@ -18,14 +20,17 @@ TEST_CASE("average is NaN for empty array") {
     //All fields of computedStats (average, max, min) must be
     //NAN (not-a-number), as defined in math.h
     
+    REQUIRE(isnan(computedStats.average));
+    REQUIRE(isnan(computedStats.min));
+    REQUIRE(isnan(computedStats.max));
     //Design the REQUIRE statement here.
     //Use http://www.cplusplus.com/reference/cmath/isnan/
 }
-#if 0
+
 TEST_CASE("raises alerts when max is greater than threshold") {
     EmailAlert emailAlert;
-    LEDAlert ledAlert;
-    std::vector<IAlerter*> alerters = {&emailAlert, &ledAlert};
+    LedAlert ledAlert;
+    std::vector<IAlert*> alerters = {&emailAlert, &ledAlert};
     
     const float maxThreshold = 10.2;
     StatsAlerter statsAlerter(maxThreshold, alerters);
@@ -34,4 +39,5 @@ TEST_CASE("raises alerts when max is greater than threshold") {
     REQUIRE(emailAlert.emailSent);
     REQUIRE(ledAlert.ledGlows);
 }
+
 #endif
