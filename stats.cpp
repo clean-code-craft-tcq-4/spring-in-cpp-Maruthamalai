@@ -42,30 +42,3 @@ Stats Statistics::StatisticsCalc::ComputeStatistics(const std::vector<float> &el
     return computedStats;
 }
 
-
-int main()
-{
-    Statistics::StatisticsCalc* computeObj = new Statistics::StatisticsCalc();
-    
-    auto computedStats =  computeObj->ComputeStatistics({1.5, 8.9, 3.2, 4.5});
-    float epsilon = 0.001;
-    std::cout << computedStats.average << std::endl;
-    std::cout << computedStats.max << std::endl;
-    std::cout << computedStats.min << std::endl;
-    if ((computedStats.average - 4.525) < epsilon)
-    {
-        std::cout << "Avg ok" << std::endl;
-    }
-    if ((computedStats.max - 8.9) < epsilon)
-    {
-       std:: cout << "Max ok" << std::endl;
-    }
-    if ((computedStats.min - 1.5) < epsilon)
-    {
-        std::cout << "Min ok" << std::endl;
-    }
-    else
-    {
-    }
-    return 0;
-}
