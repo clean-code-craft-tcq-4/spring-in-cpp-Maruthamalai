@@ -2,35 +2,49 @@
 
 #include "catch.hpp"
 #include "stats.h"
+#include "StatsAlerter.h"
+#include <math.h>
 
-#include <cmath>
-
-TEST_CASE("reports average, minimum and maximum") {
-    auto computedStats = Statistics::ComputeStatistics({1.5, 8.9, 3.2, 4.5});
-    float epsilon = 0.001;
-    REQUIRE(std::abs(computedStats.average - 4.525) < epsilon);
-    REQUIRE(std::abs(computedStats.max - 8.9) < epsilon);
-    REQUIRE(std::abs(computedStats.min - 1.5) < epsilon);
+using namespace std;
+TEST_CASE("reports average, minimum and maximum")
+{
+	Statistics::StatisticsCalc* computeObj = new Statistics::StatisticsCalc();
+	auto computedStats = computeObj->ComputeStatistics(
+	{ 1.5, 8.9, 3.2, 4.5 });
+	float epsilon = 0.001;
+	REQUIRE(std::abs(computedStats.average - 4.525) < epsilon);
+	REQUIRE(std::abs(computedStats.max - 8.9) < epsilon);
+	REQUIRE(std::abs(computedStats.min - 1.5) < epsilon);
 }
 
-TEST_CASE("average is NaN for empty array") {
-    auto computedStats = Statistics::ComputeStatistics({});
-    //All fields of computedStats (average, max, min) must be
-    //NAN (not-a-number), as defined in math.h
-    
-    //Design the REQUIRE statement here.
-    //Use http://www.cplusplus.com/reference/cmath/isnan/
+TEST_CASE("average is NaN for empty array")
+{
+	Statistics::StatisticsCalc* computeObj = new Statistics::StatisticsCalc();
+	auto computedStats = computeObj->ComputeStatistics(
+	{ });
+	//All fields of computedStats (average, max, min) must be
+	//NAN (not-a-number), as defined in math.h
+
+	REQUIRE(isnan(computedStats.average));
+	REQUIRE(isnan(computedStats.min));
+	REQUIRE(isnan(computedStats.max));
+	//Design the REQUIRE statement here.
+	//Use http://www.cplusplus.com/reference/cmath/isnan/
 }
 
-TEST_CASE("raises alerts when max is greater than threshold") {
-    EmailAlert emailAlert;
-    LEDAlert ledAlert;
-    std::vector<IAlerter*> alerters = {&emailAlert, &ledAlert};
-    
-    const float maxThreshold = 10.2;
-    StatsAlerter statsAlerter(maxThreshold, alerters);
-    statsAlerter.checkAndAlert({99.8, 34.2, 4.5, 6.7});
+TEST_CASE("raises alerts when max is greater than threshold")
+{
+	EmailAlert emailAlert;
+	LedAlert ledAlert;
+	std::vector<IAlert*> alerters =
+	{ &emailAlert, &ledAlert };
 
-    REQUIRE(emailAlert.emailSent);
-    REQUIRE(ledAlert.ledGlows);
+	const float maxThreshold = 10.2;
+	StatsAlerter statsAlerter(maxThreshold, alerters);
+	statsAlerter.checkAndAlert(
+	{ 99.8, 34.2, 4.5, 6.7 });
+
+	REQUIRE(emailAlert.getNumberofEmailAlerts() == 2);
+	REQUIRE(ledAlert.getNumberofLedAlerts() == 2);
 }
+
