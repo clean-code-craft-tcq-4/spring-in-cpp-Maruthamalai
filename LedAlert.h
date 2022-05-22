@@ -11,7 +11,7 @@ public:
 	LedAlert();
 	~LedAlert();
 	void Alerter();
-	unsigned short getNumberofEmailAlerts();
+	unsigned short getNumberofLedAlerts();
 };
 
 #endif

@@ -15,7 +15,7 @@ void LedAlert::Alerter()
 {
 	ledGlows++;
 }
-unsigned short int LedAlert::getNumberofEmailAlerts()
+unsigned short int LedAlert::getNumberofLedAlerts()
 {
 	return LedAlert::ledGlows;
 }
