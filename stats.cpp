@@ -1,13 +1,22 @@
 #include "stats.h"
 #include <cmath>
 #include <iostream>
-#define MAX_THRESHOLD     (10.5)
+#define MAX_THRESHOLD     (10.5f)
 
+//Constructor
 Statistics::StatisticsCalc::StatisticsCalc()
 {
-	emailInst = new EmailAlert();
-	ledAlertInst = new LedAlert();
+	m_emailInst = new EmailAlert();
+	m_ledAlertInst = new LedAlert();
+
+	std::vector<IAlert*> alerters =
+		{ m_emailInst, m_ledAlertInst };
+
+	m_alerter = new StatsAlerter(MAX_THRESHOLD, alerters);
+
 }
+
+//Destructor
 Statistics::StatisticsCalc::~StatisticsCalc()
 {
 /*	if(emailInst)
@@ -20,20 +29,22 @@ Statistics::StatisticsCalc::~StatisticsCalc()
 	}*/
 }
 
+//Computer min, max, average
 Stats Statistics::StatisticsCalc::ComputeStatistics(const std::vector<float> &elements)
 {
     Stats computedStats = {NAN, NAN, NAN};
     float total = 0.0;
 
-    // Initialise valules
+    // Initialize values
     if (elements.size() > 0)
     {
+    	m_alerter->checkAndAlert(elements);
         computedStats.average = 0.0;
         computedStats.min = elements.at(0);
         computedStats.max = elements.at(0);
     }
 
-    // Travese through array
+    // Traverse through array
     for (auto &it : elements)
     {
         total += it;
@@ -53,32 +64,3 @@ Stats Statistics::StatisticsCalc::ComputeStatistics(const std::vector<float> &el
     return computedStats;
 }
 
-/*
-
-int main()
-{
-    Statistics::StatisticsCalc* computeObj = new Statistics::StatisticsCalc();
-    
-    auto computedStats =  computeObj->ComputeStatistics({1.5, 8.9, 3.2, 4.5});
-    float epsilon = 0.001;
-    std::cout << computedStats.average << std::endl;
-    std::cout << computedStats.max << std::endl;
-    std::cout << computedStats.min << std::endl;
-    if ((computedStats.average - 4.525) < epsilon)
-    {
-        std::cout << "Avg ok" << std::endl;
-    }
-    if ((computedStats.max - 8.9) < epsilon)
-    {
-       std:: cout << "Max ok" << std::endl;
-    }
-    if ((computedStats.min - 1.5) < epsilon)
-    {
-        std::cout << "Min ok" << std::endl;
-    }
-    else
-    {
-    }
-    return 0;
-}
-*/

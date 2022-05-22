@@ -4,7 +4,7 @@
 #include <vector>
 #include "EmailAlert.h"
 #include "LedAlert.h"
-
+#include "StatsAlerter.h"
 typedef struct
 {
 
@@ -19,9 +19,10 @@ class StatisticsCalc
 {
 private:
 	/* data */
-	Stats statsElements;
-	EmailAlert *emailInst;
-	LedAlert *ledAlertInst;
+	Stats m_statsElements;
+	EmailAlert *m_emailInst;
+	LedAlert *m_ledAlertInst;
+	StatsAlerter *m_alerter;
 
 public:
 	StatisticsCalc();
